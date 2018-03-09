@@ -2,3 +2,4 @@
 *.iml
 output/*
 __pycache__
+pelican-plugins

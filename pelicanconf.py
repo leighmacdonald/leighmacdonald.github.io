@@ -6,6 +6,9 @@ AUTHOR = 'Leigh MacDonald'
 SITENAME = 'Nothing Important'
 SITEURL = ''
 
+PLUGIN_PATHS = ['pelican-plugins']
+PLUGINS = ['assets', 'sitemap', 'gravatar']
+
 PATH = 'content'
 
 TIMEZONE = 'America/Edmonton'
