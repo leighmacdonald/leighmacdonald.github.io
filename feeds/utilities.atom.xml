@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Midnight in a Perfect World - Utilities</title><link href="/" rel="alternate"></link><link href="/feeds/utilities.atom.xml" rel="self"></link><id>/</id><updated>2018-03-11T06:34:00-06:00</updated><entry><title>Configure Synergy Forward/Back Mouse Buttons</title><link href="/configure-synergy-forwardback-mouse-buttons.html" rel="alternate"></link><published>2018-03-11T06:34:00-06:00</published><updated>2018-03-11T06:34:00-06:00</updated><author><name>Leigh MacDonald</name></author><id>tag:None,2018-03-11:/configure-synergy-forwardback-mouse-buttons.html</id><summary type="html">&lt;p&gt;&lt;a href="https://symless.com/synergy"&gt;Syngery&lt;/a&gt; is a software solution that allows sharing of your mouse
+and keyboard across multiple computers and operating systems. It
+even has functionality to allow copying and pasting between those
+systems seamlessly.&lt;/p&gt;
+&lt;p&gt;For reasons im not sure of, when trying to use the client with some linux
+systems, it does …&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;a href="https://symless.com/synergy"&gt;Syngery&lt;/a&gt; is a software solution that allows sharing of your mouse
+and keyboard across multiple computers and operating systems. It
+even has functionality to allow copying and pasting between those
+systems seamlessly.&lt;/p&gt;
+&lt;p&gt;For reasons im not sure of, when trying to use the client with some linux
+systems, it does not properly support the forward and back mouse buttons 
+(mouse4/mouse5) commonly used for web browsing navigation. To enable this 
+functionality i had to edit the synergy server configuration by hand with a 
+couple extra settings.&lt;/p&gt;
+&lt;p&gt;Below is an excerpt of the config file with the two required lines changed
+under &lt;code&gt;section: options&lt;/code&gt;&lt;/p&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt; 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;section: options
+    &lt;span class="nv"&gt;heartbeat&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="m"&gt;5000&lt;/span&gt;
+    &lt;span class="nv"&gt;relativeMouseMoves&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;false&lt;/span&gt;
+    &lt;span class="nv"&gt;screenSaverSync&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;true&lt;/span&gt;
+    &lt;span class="nv"&gt;win32KeepForeground&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;false&lt;/span&gt;
+    &lt;span class="nv"&gt;clipboardSharing&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;true&lt;/span&gt;
+    &lt;span class="nv"&gt;switchCorners&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; none 
+    &lt;span class="nv"&gt;switchCornerSize&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="m"&gt;0&lt;/span&gt;
+&lt;span class="hll"&gt;    mousebutton&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="m"&gt;4&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; keystroke&lt;span class="o"&gt;(&lt;/span&gt;WWWBack&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;span class="hll"&gt;    mousebutton&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="m"&gt;5&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; keystroke&lt;span class="o"&gt;(&lt;/span&gt;WWWForward&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;/span&gt;end
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+
+&lt;p&gt;For reference i am using a windows based "server" and linux based "clients" using
+Synergy 1.8. I have not yet upgraded to a 2.x license as it is still lacking in features 
+compared to the 1.x branch, so i am unsure is this is something that's been fixed in 2.x.&lt;/p&gt;</content><category term="Windows"></category><category term="Linux"></category><category term="Synergy"></category></entry></feed>

@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<!--suppress HtmlUnknownTarget -->
+<html lang="en">
+<head>
+
+        <meta charset="utf-8"/>
+            <link href="/feeds/all.atom.xml" type="application/atom+xml" rel="alternate"
+                  title="Midnight in a Perfect World Full Atom Feed"/>
+            <link href="/feeds/games.atom.xml" type="application/atom+xml"
+                  rel="alternate" title="Midnight in a Perfect World Categories Atom Feed"/>
+        <link rel="shortcut icon" href="https://s.gravatar.com/avatar/261a7ce05887c4f60d68a1e8351302b6?s=200"/>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Midnight in a Perfect World</title>
+
+        <script src="/theme/js/jquery.js"></script>
+        <script src="/theme/js/what-input.js"></script>
+        <script src="/theme/js/foundation.js"></script>
+        <script src="/theme/js/main.js"></script>
+
+</head>
+<body>
+<nav data-sticky-container>
+    <div class="title-bar" data-responsive-toggle="responsive-menu" data-hide-for="medium">
+        <button class="menu-icon" type="button" data-toggle="responsive-menu"></button>
+        <div class="title-bar-title">Menu</div>
+    </div>
+
+    <div class="top-bar" id="responsive-menu" data-sticky data-options="marginTop:0;">
+        <div class="top-bar-left">
+            <ul class="dropdown menu" data-dropdown-menu>
+                <li class="menu-text">Midnight in a Perfect World</li>
+
+                    <li><a href="/"><i class="fi-home"></i> Homepage</a></li>
+                    <li><a href="/categories.html"><i class="fi-folder"></i> Categories</a></li>
+
+            </ul>
+        </div>
+        <div class="top-bar-right">
+            <ul class="menu">
+                <li>
+                    <input type="search" placeholder="Search">
+                </li>
+                <li>
+                    <button type="button" class="button">Search</button>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="grid-container container">
+    <div class="grid-x grid-padding-x">
+        <section class="large-9 medium-9 cell">
+
+<div class="grid-x grid-padding-x">
+        <article class="large-12 cell">
+            <header>
+                <h1><a href="/team-fortress-2-bind-generator.html" rel="bookmark"
+                       title="Permalink to Team Fortress 2 Bind Generator">Team Fortress 2 Bind Generator</a></h1>
+                <div class="clearfix">
+
+                        <time class="date" title="2018-03-10T04:34:00-07:00"><i
+                                class="fi-calendar"></i> Sat 10 March 2018 </time>
+                            <address class="author_list">Authors:
+                                    <a class="author" href="/author/leigh-macdonald.html" rel="author">Leigh MacDonald</a>
+                            </address>
+                    <div class="float-right header_text" style="display: inline-block">
+                            <span class="header_color">Tags: </span>
+                                <a href="/tag/tf2.html">
+                                    <span class="cat_tag">TF2,</span></a>
+                                <a href="/tag/python.html">
+                                    <span class="cat_tag">Python</span></a>
+                    </div>
+                </div>
+            </header>
+
+                <h2>Installation</h2>
+<p>You can use the pre built executable package available for <a href="https://github.com/leighmacdonald/tf2_bind_gen/releases/download/v1.2/tf2_bind_gen-v1.2.zip">download</a>.
+This includes everything you need to get running.</p>
+<p>If you don't trust me or you want to edit or view the code yourself, you must have the below requirements met:</p>
+<p>The script only requires <a href="https://www.python.org/downloads/">python</a> to be installed. It uses no external dependencies.
+I have only tested with python 3.3+, but 2.7 may also work.</p>
+<p>Download the <a href="https://github.com/leighmacdonald/tf2_bind_gen/archive/master.zip">zip file</a> and extract it anywhere you want. It 
+does not need to be in the tf2 directory to work.</p>
+<p>You can of course clone the repo as well if you have a git client installed.</p>
+<h2>Usage</h2>
+<p>For this to function you must have a key bound to reload the newly updated
+binds generated on the fly. Add a bind like the following to your autoexec.cfg file or the appropriate cfg 
+file for your configuration, replacing the bound key to one of your choosing.</p>
+<div class="highlight"><pre><span></span>bind f1 &quot;exec log_parser; bind_gen&quot;
+</pre></div>
+
+
+<p>If you don't add a key to reload the log_parser.cfg file you will never get updated player names. So this is 
+very important and probably the most likely area to encounter a problem with the script.</p>
+<p>Additionally, you must also add the following launch options to TF2:</p>
+<div class="highlight"><pre><span></span>-condebug -conclearlog
+</pre></div>
+
+
+<p>This will enable the required output of tf2 log messages to the default log path. -conclearlog is optional but
+it will clear the log file upon startup so the log file should not get too large.</p>
+<div class="highlight"><pre><span></span><span class="n">usage</span><span class="o">:</span> <span class="n">tf2_bind_gen</span><span class="o">.</span><span class="na">py</span> <span class="o">[-</span><span class="n">h</span><span class="o">]</span> <span class="o">[--</span><span class="n">log_path</span> <span class="n">LOG_PATH</span><span class="o">]</span> <span class="o">[--</span><span class="n">config_path</span> <span class="n">CONFIG_PATH</span><span class="o">]</span>
+                       <span class="o">[--</span><span class="n">bind_key</span> <span class="n">BIND_KEY</span><span class="o">]</span> <span class="o">[--</span><span class="n">test</span><span class="o">]</span> <span class="o">[--</span><span class="n">binds</span> <span class="n">BINDS</span><span class="o">]</span>
+                       <span class="o">[--</span><span class="n">stats</span> <span class="n">STATS</span><span class="o">]</span>
+
+<span class="n">TF2</span> <span class="n">Log</span> <span class="n">Tail</span> <span class="n">Parser</span>
+
+<span class="n">optional</span> <span class="k">arguments</span><span class="o">:</span>
+  <span class="o">-</span><span class="n">h</span><span class="o">,</span> <span class="o">--</span><span class="n">help</span>            <span class="n">show</span> <span class="k">this</span> <span class="n">help</span> <span class="n">message</span> <span class="n">and</span> <span class="n">exit</span>
+  <span class="o">--</span><span class="n">log_path</span> <span class="n">LOG_PATH</span>   <span class="n">Path</span> <span class="n">to</span> <span class="n">console</span><span class="o">.</span><span class="na">log</span> <span class="n">generated</span> <span class="n">by</span> <span class="n">TF2</span> <span class="o">(</span><span class="k">default</span><span class="o">:</span>
+                        <span class="n">C</span><span class="o">:\</span><span class="n">Program</span> <span class="n">Files</span> <span class="o">(</span><span class="n">x86</span><span class="o">)\</span><span class="n">Steam</span><span class="o">\</span><span class="n">steamapps</span><span class="o">\</span><span class="n">common</span><span class="o">\</span><span class="n">Team</span>
+                        <span class="n">Fortress</span> <span class="mi">2</span><span class="o">\</span><span class="n">tf</span><span class="o">\</span><span class="n">console</span><span class="o">.</span><span class="na">log</span><span class="o">)</span>
+  <span class="o">--</span><span class="n">config_path</span> <span class="n">CONFIG_PATH</span>
+                        <span class="n">Path</span> <span class="n">to</span> <span class="n">the</span> <span class="o">.</span><span class="na">cfg</span> <span class="n">file</span> <span class="n">to</span> <span class="n">be</span> <span class="n">generated</span> <span class="o">(</span><span class="k">default</span><span class="o">:</span>
+                        <span class="n">C</span><span class="o">:\</span><span class="n">Program</span> <span class="n">Files</span> <span class="o">(</span><span class="n">x86</span><span class="o">)\</span><span class="n">Steam</span><span class="o">\</span><span class="n">steamapps</span><span class="o">\</span><span class="n">common</span><span class="o">\</span><span class="n">Team</span>
+                        <span class="n">Fortress</span> <span class="mi">2</span><span class="o">\</span><span class="n">tf</span><span class="o">\</span><span class="n">cfg</span><span class="o">\</span><span class="n">log_parser</span><span class="o">.</span><span class="na">cfg</span>
+  <span class="o">--</span><span class="n">bind_key</span> <span class="n">BIND_KEY</span>   <span class="n">Keyboard</span> <span class="n">shortcut</span> <span class="n">used</span> <span class="k">for</span> <span class="n">chat</span> <span class="n">bind</span> <span class="o">(</span><span class="k">default</span><span class="o">:</span> <span class="n">f2</span><span class="o">)</span>
+  <span class="o">--</span><span class="n">test</span>                <span class="n">Test</span> <span class="n">parsing</span> <span class="n">your</span> <span class="n">existing</span> <span class="n">log</span> <span class="n">files</span> <span class="o">(</span><span class="k">default</span><span class="o">:</span> <span class="n">False</span><span class="o">)</span>
+  <span class="o">--</span><span class="n">binds</span> <span class="n">BINDS</span>         <span class="n">Path</span> <span class="n">to</span> <span class="n">your</span> <span class="n">custom</span> <span class="n">binds</span> <span class="n">file</span><span class="o">.</span> <span class="o">(</span><span class="k">default</span><span class="o">:</span> <span class="n">binds</span><span class="o">.</span><span class="na">txt</span><span class="o">)</span>
+  <span class="o">--</span><span class="n">stats</span> <span class="n">STATS</span>         <span class="n">Path</span> <span class="n">to</span> <span class="n">your</span> <span class="n">stats</span> <span class="n">file</span><span class="o">.</span> <span class="o">(</span><span class="k">default</span><span class="o">:</span> <span class="n">stats</span><span class="o">.</span><span class="na">json</span><span class="o">)</span>
+</pre></div>
+
+
+<p>The default settings should work for most users. If you want to change the key that the bind gets bound
+too set the --bind_key option to the key of your choosing. For example:</p>
+<div class="highlight"><pre><span></span>tf2_bind_gen.py --bind_key f4
+</pre></div>
+
+
+<p>Once running you can use your two binds to reload the log_parser.cfg and to execute your bind.</p>
+<h2>Customizing Your Sick Memes</h2>
+<p>You can customize the binds used by creating or editing the binds.txt file. The format is 1 bind per line and 
+has the following variables which can be used: </p>
+<ul>
+<li>{player} - Your player name</li>
+<li>{victim} - The name of the person you killed</li>
+<li>{weapon} - The weapon you killed them with. (only console names so: "tf_projectile_rocket" and not "Rocket Launcher")</li>
+<li>{kills} - The number of times you've killed a player with that name. Doesnt currently track Steam ID.</li>
+</ul>
+<p>Some examples are below:</p>
+<div class="highlight"><pre><span></span>Get rekt {victim} That makes it {total}! :)
+[generic] Why so mad {victim}?
+[generic] {player} rekt {victim} LOL!
+[market_gardener.crit] Try looking up next time {victim}!
+[tf_projectile_rocket.crit] EZ Crit! Thanks {victim}!
+[tf_projectile_rocket] Thanks for the farm {victim}!
+[world] {player} &gt; world &gt; {victim}
+</pre></div>
+
+
+<p>You can specify binds for specific weapon kills and whether they are a crit or not. These keys correspond to the 
+weapon names you see in the console kill log. I don't have a list of all of these, you can check your console logs if 
+you don't know the name of something you want to use. See above for examples of crit and non-crit weapon binds. If no
+[key] is defined, it will be defined as [generic] for you by default.</p>
+<p>If you are using an <a href="https://wiki.teamfortress.com/wiki/Australium">Australium weapon</a>, there is no way to know if a 
+kill is a crit or not, all kills are considered a crit according to the console log. So if you want to match a australium
+weapon, make sure to always add ".crit" to the bind key configuration.</p>
+<p>If you are using a file other than binds.txt you can change the default path to your binds by specifying the --binds 
+flag value.</p>
+<div class="highlight"><pre><span></span>tf2_bind_gen.py --binds binds_custom.txt
+</pre></div>
+
+
+<h2>Will this get me VAC banned?</h2>
+<p>Short answer: No. </p>
+<p>Less short answer: No, all this script does is read and parse the tf2 log file which is a plain text file. 
+It then write a new .cfg. There is no functionality to read live TF2 data from memory, attaching to 
+running process or DLL injections happening at all. </p>
+<h2>Example</h2>
+<p><img alt="Example 1" src="https://raw.githubusercontent.com/leighmacdonald/tf2_bind_gen/master/example/screen_1.jpg"></p>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
+<span class="kn">from</span> <span class="nn">os</span> <span class="kn">import</span> <span class="n">environ</span>
+<span class="kn">from</span> <span class="nn">os.path</span> <span class="kn">import</span> <span class="n">isfile</span><span class="p">,</span> <span class="n">join</span><span class="p">,</span> <span class="n">exists</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">choice</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;bind_gen&quot;</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">KillMsg</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">player</span><span class="p">,</span> <span class="n">victim</span><span class="p">,</span> <span class="n">weapon</span><span class="p">,</span> <span class="n">crit</span><span class="p">,</span> <span class="n">total</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">player</span> <span class="o">=</span> <span class="n">player</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">victim</span> <span class="o">=</span> <span class="n">victim</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">weapon</span> <span class="o">=</span> <span class="n">weapon</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">crit</span> <span class="o">=</span> <span class="bp">True</span> <span class="k">if</span> <span class="s2">&quot;crit&quot;</span> <span class="ow">in</span> <span class="n">crit</span> <span class="k">else</span> <span class="bp">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">total</span> <span class="o">=</span> <span class="n">total</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">key</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">crit</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;{}.crit&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">weapon</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">weapon</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;victim: {} weapon: {} crit: {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">victim</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">weapon</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">crit</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">StatLogger</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stats_file</span><span class="p">,</span> <span class="n">write_every</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stats_file</span> <span class="o">=</span> <span class="n">stats_file</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">writer_count</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">write_every</span> <span class="o">=</span> <span class="n">write_every</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stats</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stats_file</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">log</span><span class="p">:</span>
+            <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">,</span> <span class="n">log</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stats_file</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">False</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stats_file</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">log</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">log</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_name</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="n">user_name</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">increment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_name</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="n">user_name</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">writer_count</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">writer_count</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">write_every</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">write</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">writer_count</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="n">user_name</span><span class="p">]</span>
+
+
+<span class="k">class</span> <span class="nc">LogParser</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="c1">#  NAME killed NAME with GUN.</span>
+    <span class="n">_re_kill</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^(.+)\skilled\s(.+)\swith\s(.+)(\.|\. \(crit\))$&quot;</span><span class="p">)</span>
+
+    <span class="c1">#  NAME connected</span>
+    <span class="n">_re_connected</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^(.+)\sconnected$&quot;</span><span class="p">)</span>
+
+    <span class="c1">#  Disconnecting from abandoned match server</span>
+    <span class="n">_re_disconnect</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;(^Disconnecting from abandoned match server$|\(Server shutting down\)$)&quot;</span><span class="p">)</span>
+
+    <span class="n">_re_bind_key</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^\[(.+?)\](.+?)$&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">log_path</span><span class="p">,</span> <span class="n">cfg_path</span><span class="p">,</span> <span class="n">binds_file</span><span class="p">,</span> <span class="n">stats_file</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log_path</span> <span class="o">=</span> <span class="n">log_path</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cfg_path</span> <span class="o">=</span> <span class="n">cfg_path</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">username</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">default_bind_key</span> <span class="o">=</span> <span class="s2">&quot;generic&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">templates</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_binds</span><span class="p">(</span><span class="n">binds_file</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stats</span> <span class="o">=</span> <span class="n">StatLogger</span><span class="p">(</span><span class="n">stats_file</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">parse_log</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">username</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">m</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_re_connected</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">m</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">username</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">groups</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Connected with username: {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">username</span><span class="p">))</span>
+                <span class="k">return</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_re_disconnect</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">line</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">username</span> <span class="o">=</span> <span class="bp">None</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Disconnected from server&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">write</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">match</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_re_kill</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">match</span><span class="p">:</span>
+                <span class="n">msg</span> <span class="o">=</span> <span class="n">KillMsg</span><span class="p">(</span><span class="o">*</span><span class="n">match</span><span class="o">.</span><span class="n">groups</span><span class="p">())</span>
+                <span class="k">if</span> <span class="n">msg</span><span class="o">.</span><span class="n">player</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">username</span><span class="p">:</span>
+                    <span class="n">msg</span><span class="o">.</span><span class="n">total</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">increment</span><span class="p">(</span><span class="n">msg</span><span class="o">.</span><span class="n">victim</span><span class="p">)</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">write_cfg</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="n">msg</span>
+
+    <span class="k">def</span> <span class="nf">read_binds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_name</span><span class="p">):</span>
+        <span class="n">found</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">binds</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">readlines</span><span class="p">():</span>
+            <span class="n">real_line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">real_line</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">binds</span><span class="p">:</span>
+                <span class="n">match_key</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_re_bind_key</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">real_line</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">match_key</span><span class="p">:</span>
+                    <span class="n">key</span><span class="p">,</span> <span class="n">raw_msg</span> <span class="o">=</span> <span class="n">match_key</span><span class="o">.</span><span class="n">groups</span><span class="p">()</span>
+                    <span class="n">msg</span> <span class="o">=</span> <span class="n">raw_msg</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">key</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_bind_key</span>
+                    <span class="n">msg</span> <span class="o">=</span> <span class="n">real_line</span>
+                <span class="n">binds</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+                <span class="n">found</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Loaded {} binds&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">found</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">binds</span>
+
+    <span class="k">def</span> <span class="nf">write_cfg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">:</span> <span class="n">KillMsg</span><span class="p">):</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cfg_path</span><span class="p">,</span> <span class="s1">&#39;w+&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">cfg</span><span class="p">:</span>
+            <span class="n">cfg</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;echo &quot;Loaded log_parser.cfg&quot;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">alias</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;alias bind_gen &quot;say {} &quot;&#39;&#39;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gen_message</span><span class="p">(</span><span class="n">msg</span><span class="p">))</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">alias</span><span class="p">)</span>
+            <span class="n">cfg</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">alias</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">gen_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">:</span> <span class="n">KillMsg</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">template</span> <span class="o">=</span> <span class="n">choice</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">templates</span><span class="p">[</span><span class="n">msg</span><span class="o">.</span><span class="n">key</span><span class="p">])</span>
+        <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
+            <span class="n">template</span> <span class="o">=</span> <span class="n">choice</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">templates</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">default_bind_key</span><span class="p">])</span>
+        <span class="n">output_str</span> <span class="o">=</span> <span class="n">template</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">victim</span><span class="o">=</span><span class="n">msg</span><span class="o">.</span><span class="n">victim</span><span class="p">,</span> <span class="n">player</span><span class="o">=</span><span class="n">msg</span><span class="o">.</span><span class="n">player</span><span class="p">,</span> <span class="n">weapon</span><span class="o">=</span><span class="n">msg</span><span class="o">.</span><span class="n">weapon</span><span class="p">,</span>
+                                     <span class="n">total</span><span class="o">=</span><span class="n">msg</span><span class="o">.</span><span class="n">total</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">output_str</span>
+
+    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tail</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">parse_log</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Shutting down...&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">write</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">read_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">log_file</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">open</span><span class="p">(</span><span class="n">log_file</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">readlines</span><span class="p">():</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_log</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">msg</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gen_message</span><span class="p">(</span><span class="n">msg</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">tail</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">first_call</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">log_path</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">log_file</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">first_call</span><span class="p">:</span>
+                        <span class="n">log_file</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+                        <span class="n">first_call</span> <span class="o">=</span> <span class="bp">False</span>
+                    <span class="n">latest_data</span> <span class="o">=</span> <span class="n">log_file</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+                    <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">latest_data</span><span class="p">:</span>
+                            <span class="k">try</span><span class="p">:</span>
+                                <span class="n">latest_data</span> <span class="o">+=</span> <span class="n">log_file</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+                            <span class="k">except</span> <span class="ne">UnicodeDecodeError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+                                <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="n">err</span><span class="p">)</span>
+                                <span class="k">continue</span>
+                            <span class="k">if</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">latest_data</span><span class="p">:</span>
+                                <span class="k">yield</span> <span class="s1">&#39;&#39;</span>
+                                <span class="k">if</span> <span class="ow">not</span> <span class="n">isfile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">log_path</span><span class="p">):</span>
+                                    <span class="k">break</span>
+                                <span class="k">continue</span>
+                        <span class="n">latest_lines</span> <span class="o">=</span> <span class="n">latest_data</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="n">latest_data</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">:</span>
+                            <span class="n">latest_data</span> <span class="o">=</span> <span class="n">latest_lines</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">latest_data</span> <span class="o">=</span> <span class="n">log_file</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+                        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">latest_lines</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+                            <span class="k">yield</span> <span class="n">line</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
+            <span class="k">except</span> <span class="ne">IOError</span><span class="p">:</span>
+                <span class="k">yield</span> <span class="s1">&#39;&#39;</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">argparse</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">program_files_path</span> <span class="o">=</span> <span class="n">environ</span><span class="p">[</span><span class="s1">&#39;PROGRAMFILES(X86)&#39;</span><span class="p">]</span>
+    <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+        <span class="n">program_files_path</span> <span class="o">=</span> <span class="n">environ</span><span class="p">[</span><span class="s1">&#39;PROGRAMFILES&#39;</span><span class="p">]</span>
+    <span class="n">log_path_default</span> <span class="o">=</span> <span class="n">join</span><span class="p">(</span><span class="n">program_files_path</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;Steam\steamapps\common\Team Fortress 2\tf\console.log&quot;</span><span class="p">)</span>
+    <span class="n">config_path_default</span> <span class="o">=</span> <span class="n">join</span><span class="p">(</span><span class="n">program_files_path</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;Steam\steamapps\common\Team Fortress 2\tf\cfg\log_parser.cfg&quot;</span><span class="p">)</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s1">&#39;TF2 Log Tail Parser&#39;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--log_path&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">log_path_default</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Path to console.log generated by TF2 (default: {})&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">log_path_default</span><span class="p">))</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--config_path&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">config_path_default</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Path to the .cfg file to be generated (default: {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">config_path_default</span><span class="p">))</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--test&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Test parsing your existing log files (default: False)&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--binds&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;binds.txt&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Path to your custom binds file. (default: binds.txt)&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--stats&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;stats.json&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Path to your stats file. (default: stats.json)&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--debug&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Set the logging level to debug. (default: False)&quot;</span><span class="p">)</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
+
+    <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span> <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">debug</span> <span class="k">else</span> <span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">,</span>
+                        <span class="n">format</span><span class="o">=</span><span class="s2">&quot;[TF2BindGen] [</span><span class="si">%(levelname)s</span><span class="s2">] </span><span class="si">%(message)s</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">LogParser</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">log_path</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">config_path</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">binds</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">stats</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">test</span><span class="p">:</span>
+        <span class="n">parser</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">log_path_default</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">parser</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">KeyboardInterrupt</span><span class="p">:</span>
+            <span class="n">parser</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+</pre></div>
+        </article>
+    </div>
+
+        </section>
+
+        <aside class="large-3 medium-3 cell">
+<figure class="text-right">
+    <img src="https://s.gravatar.com/avatar/261a7ce05887c4f60d68a1e8351302b6?s=200">
+    <figcaption>Leigh MacDonald</figcaption>
+</figure>
+<section class="text-right">
+    <header>
+        <h5><i class="fi-cloud"></i> Tag Cloud</h5>
+    </header>
+
+        <a href="/tag/tftp.html">
+            <span class="cat_tag">TFTP,</span>
+        </a>
+        <a href="/tag/tf2.html">
+            <span class="cat_tag">TF2,</span>
+        </a>
+        <a href="/tag/linux.html">
+            <span class="cat_tag">Linux,</span>
+        </a>
+        <a href="/tag/synergy.html">
+            <span class="cat_tag">Synergy,</span>
+        </a>
+        <a href="/tag/python.html">
+            <span class="cat_tag">Python,</span>
+        </a>
+        <a href="/tag/pxe.html">
+            <span class="cat_tag">PXE,</span>
+        </a>
+        <a href="/tag/windows.html">
+            <span class="cat_tag">Windows,</span>
+        </a>
+        <a href="/tag/iscsi.html">
+            <span class="cat_tag">iSCSI,</span>
+        </a>
+        <a href="/tag/dhcp.html">
+            <span class="cat_tag">DHCP,</span>
+        </a>
+        <a href="/tag/centos.html">
+            <span class="cat_tag">CentOS</span>
+        </a>
+</section>
+<section class="text-right">
+    <header><h5><i class="fi-folder"></i> Categories</h5></header>
+        <a class="cat_tag active" href="/category/games.html"><span
+                class="cat_tag">Games,</span></a>
+        <a class="cat_tag" href="/category/sysadmin.html"><span
+                class="cat_tag">SysAdmin,</span></a>
+        <a class="cat_tag" href="/category/utilities.html"><span
+                class="cat_tag">Utilities</span></a>
+</section>        </aside>
+    </div>
+
+    <div class="grid-x grid-padding-x">
+        <footer class="large-12 medium-12 cell text-center">
+            <span>&copy; Copyright 2018 Leigh MacDonald</span>
+            <a href="/sitemap.xml">Sitemap</a>
+        </footer>
+    </div>
+</div>
+
+</body>
+</html>

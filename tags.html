@@ -1,88 +1,170 @@
 <!DOCTYPE html>
+<!--suppress HtmlUnknownTarget -->
 <html lang="en">
 <head>
 
-        <title>Nothing Important</title>
-        <meta charset="utf-8" />
-        <link href="/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Nothing Important Full Atom Feed" />
+        <meta charset="utf-8"/>
+            <link href="/feeds/all.atom.xml" type="application/atom+xml" rel="alternate"
+                  title="Midnight in a Perfect World Full Atom Feed"/>
+        <link rel="shortcut icon" href="https://s.gravatar.com/avatar/261a7ce05887c4f60d68a1e8351302b6?s=200"/>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Midnight in a Perfect World</title>
 
-
-        <!-- Mobile viewport optimized: j.mp/bplateviewport -->
-        <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1">
-
-        <link rel="stylesheet" type="text/css" href="/theme/gumby.css" />
-        <link rel="stylesheet" type="text/css" href="/theme/style.css" />
-        <link rel="stylesheet" type="text/css" href="/theme/pygment.css" />
-
-        <script src="/theme/js/libs/modernizr-2.6.2.min.js"></script>
-
-
-
+        <script src="/theme/js/jquery.js"></script>
+        <script src="/theme/js/what-input.js"></script>
+        <script src="/theme/js/foundation.js"></script>
+        <script src="/theme/js/main.js"></script>
 
 </head>
-
-<body id="index" class="home">
-
-
-    <div class="container">
-
-        <div class="row">
-
-          <header id="banner" class="body">
-                  <h1><a href="/">Nothing Important <strong></strong></a></h1>
-          </header><!-- /#banner -->
-
-            <div id="navigation" class="navbar row">
-              <a href="#" gumby-trigger="#navigation &gt; ul" class="toggle"><i class="icon-menu"></i></a>
-             
-              <ul class="columns">
-                <li><a href="/">Home</a></li>
-
-
-              </ul>
-            </div>
-
-<ul>
-<li class="nav-header"><h4><i class="icon-tags icon-large"></i>Tags</h4></li>
-</ul>
-
-       </div><!-- /.row -->
-    </div><!-- /.container -->
-
-
-       <div class="container.nopad bg">
-
-    
-        <footer id="credits" class="row">
-          <div class="seven columns left-center">
-
-                   <address id="about" class="vcard body">
-                    Proudly powered by <a href="http://getpelican.com/">Pelican</a>,
-                    which takes great advantage of <a href="http://python.org">Python</a>.
-                    <br />
-                    Based on the <a target="_blank" href="http://gumbyframework.com">Gumby Framework</a>
-                    </address>
-          </div>
-
-
-          <div class="seven columns">
-            <div class="row">
-              <ul class="socbtns">
-
-
-
-
-
-              </ul>
-            </div>
-          </div>
-        </footer>
-
+<body>
+<nav data-sticky-container>
+    <div class="title-bar" data-responsive-toggle="responsive-menu" data-hide-for="medium">
+        <button class="menu-icon" type="button" data-toggle="responsive-menu"></button>
+        <div class="title-bar-title">Menu</div>
     </div>
 
+    <div class="top-bar" id="responsive-menu" data-sticky data-options="marginTop:0;">
+        <div class="top-bar-left">
+            <ul class="dropdown menu" data-dropdown-menu>
+                <li class="menu-text">Midnight in a Perfect World</li>
 
-  <script src="/theme/js/libs/jquery-1.9.1.min.js"></script>
-  <script src="/theme/js/libs/gumby.min.js"></script>
-  <script src="/theme/js/plugins.js"></script>
+                    <li><a href="/"><i class="fi-home"></i> Homepage</a></li>
+                    <li><a href="/categories.html"><i class="fi-folder"></i> Categories</a></li>
+
+            </ul>
+        </div>
+        <div class="top-bar-right">
+            <ul class="menu">
+                <li>
+                    <input type="search" placeholder="Search">
+                </li>
+                <li>
+                    <button type="button" class="button">Search</button>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="grid-container container">
+    <div class="grid-x grid-padding-x">
+        <section class="large-9 medium-9 cell">
+    <ul>
+        <li class="nav-header"><h4><i class="icon-tags icon-large"></i>Tags</h4></li>
+            <li class="tag-4">
+                <a href="/tag/tftp.html">
+                    <i class="fi-price-tag"></i>TFTP
+                </a>
+            </li>
+            <li class="tag-4">
+                <a href="/tag/tf2.html">
+                    <i class="fi-price-tag"></i>TF2
+                </a>
+            </li>
+            <li class="tag-4">
+                <a href="/tag/linux.html">
+                    <i class="fi-price-tag"></i>Linux
+                </a>
+            </li>
+            <li class="tag-4">
+                <a href="/tag/synergy.html">
+                    <i class="fi-price-tag"></i>Synergy
+                </a>
+            </li>
+            <li class="tag-4">
+                <a href="/tag/python.html">
+                    <i class="fi-price-tag"></i>Python
+                </a>
+            </li>
+            <li class="tag-4">
+                <a href="/tag/pxe.html">
+                    <i class="fi-price-tag"></i>PXE
+                </a>
+            </li>
+            <li class="tag-4">
+                <a href="/tag/windows.html">
+                    <i class="fi-price-tag"></i>Windows
+                </a>
+            </li>
+            <li class="tag-4">
+                <a href="/tag/iscsi.html">
+                    <i class="fi-price-tag"></i>iSCSI
+                </a>
+            </li>
+            <li class="tag-4">
+                <a href="/tag/dhcp.html">
+                    <i class="fi-price-tag"></i>DHCP
+                </a>
+            </li>
+            <li class="tag-4">
+                <a href="/tag/centos.html">
+                    <i class="fi-price-tag"></i>CentOS
+                </a>
+            </li>
+    </ul>
+        </section>
+
+        <aside class="large-3 medium-3 cell">
+<figure class="text-right">
+    <img src="https://s.gravatar.com/avatar/261a7ce05887c4f60d68a1e8351302b6?s=200">
+    <figcaption>Leigh MacDonald</figcaption>
+</figure>
+<section class="text-right">
+    <header>
+        <h5><i class="fi-cloud"></i> Tag Cloud</h5>
+    </header>
+
+        <a href="/tag/tftp.html">
+            <span class="cat_tag">TFTP,</span>
+        </a>
+        <a href="/tag/tf2.html">
+            <span class="cat_tag">TF2,</span>
+        </a>
+        <a href="/tag/linux.html">
+            <span class="cat_tag">Linux,</span>
+        </a>
+        <a href="/tag/synergy.html">
+            <span class="cat_tag">Synergy,</span>
+        </a>
+        <a href="/tag/python.html">
+            <span class="cat_tag">Python,</span>
+        </a>
+        <a href="/tag/pxe.html">
+            <span class="cat_tag">PXE,</span>
+        </a>
+        <a href="/tag/windows.html">
+            <span class="cat_tag">Windows,</span>
+        </a>
+        <a href="/tag/iscsi.html">
+            <span class="cat_tag">iSCSI,</span>
+        </a>
+        <a href="/tag/dhcp.html">
+            <span class="cat_tag">DHCP,</span>
+        </a>
+        <a href="/tag/centos.html">
+            <span class="cat_tag">CentOS</span>
+        </a>
+</section>
+<section class="text-right">
+    <header><h5><i class="fi-folder"></i> Categories</h5></header>
+        <a class="cat_tag" href="/category/games.html"><span
+                class="cat_tag">Games,</span></a>
+        <a class="cat_tag" href="/category/sysadmin.html"><span
+                class="cat_tag">SysAdmin,</span></a>
+        <a class="cat_tag" href="/category/utilities.html"><span
+                class="cat_tag">Utilities</span></a>
+</section>        </aside>
+    </div>
+
+    <div class="grid-x grid-padding-x">
+        <footer class="large-12 medium-12 cell text-center">
+            <span>&copy; Copyright 2018 Leigh MacDonald</span>
+            <a href="/sitemap.xml">Sitemap</a>
+        </footer>
+    </div>
+</div>
+
 </body>
 </html>

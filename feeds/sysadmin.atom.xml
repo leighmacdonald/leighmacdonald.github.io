@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Midnight in a Perfect World - SysAdmin</title><link href="/" rel="alternate"></link><link href="/feeds/sysadmin.atom.xml" rel="self"></link><id>/</id><updated>2016-12-08T10:20:00-07:00</updated><entry><title>CentOS Based iSCSI Target (Server)</title><link href="/centos-based-iscsi-target-server.html" rel="alternate"></link><published>2016-12-08T10:20:00-07:00</published><updated>2016-12-08T10:20:00-07:00</updated><author><name>Leigh MacDonald</name></author><id>tag:None,2016-12-08:/centos-based-iscsi-target-server.html</id><summary type="html">&lt;h2&gt;Requirements&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;CentOS (but should apply well to other distros)&lt;/li&gt;
+&lt;li&gt;Disks or LVM Volumes to serve&lt;/li&gt;
+&lt;li&gt;Patience &lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Software Stack&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://www.centos.org/"&gt;CentOS&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://www.isc.org/downloads/dhcp/"&gt;ISC dhcp&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://www.kernel.org/pub/software/network/tftp/"&gt;tftp-hpa&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://ipxe.org/"&gt;iPXE&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://www.open-iscsi.com/"&gt;Open-iSCSI&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Hardware Stack&lt;/h2&gt;
+&lt;p&gt;While not terribly important ill give a list of some of the hardware i used to set this up. Of 
+note here is the …&lt;/p&gt;</summary><content type="html">&lt;h2&gt;Requirements&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;CentOS (but should apply well to other distros)&lt;/li&gt;
+&lt;li&gt;Disks or LVM Volumes to serve&lt;/li&gt;
+&lt;li&gt;Patience &lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Software Stack&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://www.centos.org/"&gt;CentOS&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://www.isc.org/downloads/dhcp/"&gt;ISC dhcp&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://www.kernel.org/pub/software/network/tftp/"&gt;tftp-hpa&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://ipxe.org/"&gt;iPXE&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://www.open-iscsi.com/"&gt;Open-iSCSI&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Hardware Stack&lt;/h2&gt;
+&lt;p&gt;While not terribly important ill give a list of some of the hardware i used to set this up. Of 
+note here is the fact that no special expensive iSCSI controller cards are used to boot. Instead 
+we rely on chainbooting iPXE which is capable of filling that role at no extra cost. I am 
+using a raid controller with 256mb to help with speed and to give me more ports on this old 
+machine as well as free up some CPU cycles. The server class nic will be used for the iscsi disks 
+only. Each port will be dedicated to a iscsi disk.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;3Ware 8-Port Sata RAID Controller&lt;/li&gt;
+&lt;li&gt;6X500GB SATAII (2XRAID1 iSCSI Targets, 1XRAID1 Boot Drive)&lt;/li&gt;
+&lt;li&gt;Intel Onboard 1000mbit NIC X 2&lt;/li&gt;
+&lt;li&gt;Intel PCI-X Dual Port 1000mbit Server NIC&lt;/li&gt;
+&lt;li&gt;Intel P4 CPU&lt;/li&gt;
+&lt;li&gt;Supermicro Server Motherboard&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The clients will initially consist of an old AM2 based AMD machine and a newer small form 
+factor E-350 based machine. Both machines will be using iPXE to boot iSCSI. Both machines will 
+be setup using Arch Linux.&lt;/p&gt;
+&lt;h2&gt;Installation&lt;/h2&gt;
+&lt;p&gt;Everything needed is available under the base CentOS repo so lukily the software installing 
+is trivial. We will of course just use yum for this as follows.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;[root@tgtd html]# yum install iscsi-initiator-utils dhcp tftp-server syslinux
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;If you are using another distro you will need to find the equivalent commands yourself. 
+iscsi-initiator-utils may be called open-iscsi on some distros for example.&lt;/p&gt;
+&lt;h2&gt;iSCSI Target Server&lt;/h2&gt;
+&lt;p&gt;I am exporting full disks, but you can easily export LVM volumes too. If you want to use 
+LVM volumes then create it as follows, skip this otherwise.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;# Assumed sdb is a disk to export, created 20gb volume.
+[root@tgtd html]# pvcreate /dev/sdb1
+[root@tgtd html]# vgcreate -s 32M vg_target00 /dev/sdb1
+[root@tgtd html]# lvcreate -L 20G -n lv_target00 vg_target00
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Now we need to tell the iscsi daemon what disks we want to export by editing &lt;code&gt;/etc/tgt/targets.conf&lt;/code&gt;. 
+If you are using LVM you should change &lt;code&gt;direct-store&lt;/code&gt; to &lt;code&gt;backing-store&lt;/code&gt;. Make sure to update 
+the disk paths if you are using LVM instead.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;default-driver iscsi
+
+&lt;span class="nt"&gt;&amp;lt;target&lt;/span&gt; &lt;span class="err"&gt;iqn.2012-11.li.cudd.router:htpc1&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;
+    direct-store /dev/sdb
+&lt;span class="nt"&gt;&amp;lt;/target&amp;gt;&lt;/span&gt;
+
+# Optional extra disks to export
+&lt;span class="nt"&gt;&amp;lt;target&lt;/span&gt; &lt;span class="err"&gt;iqn.2012-11.li.cudd.router:htpc2&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;
+    direct-store /dev/sdc
+&lt;span class="nt"&gt;&amp;lt;/target&amp;gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;You should now be able to (re)start your iscsi target.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;[root@tgtd html]# /etc/init.d/tgtd start
+Starting SCSI target daemon:  [OK]
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Verify its working by running tgtadm --mode target --op show. You should see the same number of 
+Targets defined as you have added to the configuration earlier. In my case its 2 as shown.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;[root@tgtd html]# tgtadm --mode target --op show
+Target 1: iqn.2012-11.li.cudd.router:htpc1
+System information:
+    Driver: iscsi
+    State: ready
+I_T nexus information:
+    I_T nexus: 51
+        Initiator: iqn.2012-11.li.cudd.htpc1:htpc1
+        Connection: 0
+            IP Address: 172.16.1.13
+LUN information:
+    LUN: 0
+        Type: controller
+        SCSI ID: IET     00010000
+        SCSI SN: beaf10
+        Size: 0 MB, Block size: 1
+        Online: Yes
+        Removable media: No
+        Prevent removal: No
+        Readonly: No
+        Backing store type: null
+        Backing store path: None
+        Backing store flags:
+    LUN: 1
+        Type: disk
+        SCSI ID: IET     00010001
+        SCSI SN: 9QG1CAH1A9D54D00A538
+        Size: 499989 MB, Block size: 512
+        Online: Yes
+        Removable media: No
+        Prevent removal: No
+        Readonly: No
+        Backing store type: rdwr
+        Backing store path: /dev/sdb
+        Backing store flags:
+Account information:
+ACL information:
+    ALL
+Target 2: iqn.2012-11.li.cudd.router:htpc2
+System information:
+    Driver: iscsi
+    State: ready
+I_T nexus information:
+LUN information:
+    LUN: 0
+        Type: controller
+        SCSI ID: IET     00020000
+        SCSI SN: beaf20
+        Size: 0 MB, Block size: 1
+        Online: Yes
+        Removable media: No
+        Prevent removal: No
+        Readonly: No
+        Backing store type: null
+        Backing store path: None
+        Backing store flags:
+    LUN: 1
+        Type: disk
+        SCSI ID: IET     00020001
+        SCSI SN: 9QG3WDLVA9D55200415D
+        Size: 499989 MB, Block size: 512
+        Online: Yes
+        Removable media: No
+        Prevent removal: No
+        Readonly: No
+        Backing store type: rdwr
+        Backing store path: /dev/sdc
+        Backing store flags:
+Account information:
+ACL information:
+    ALL
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;If that worked correctly you can now set it to start on boot.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;[root@tgtd html]# chkconfig tgtd on
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;DHCP Server&lt;/h2&gt;
+&lt;p&gt;Open your dhcp config file located at &lt;code&gt;/etc/dhcp/dhcpd.conf&lt;/code&gt;. And configure it as follows, adjusting 
+for your own network topology. You must make sure that the iscsi target configured matches the 
+one you configure for the host in dhcp. My target is &lt;code&gt;iqn.2012-11.li.cudd.router:htpc1&lt;/code&gt;. Which 
+you can see configured below along with the address of the iscsi target &lt;code&gt;172.16.1.10&lt;/code&gt;. You must 
+change these.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="err"&gt;#&lt;/span&gt; &lt;span class="nt"&gt;Tell&lt;/span&gt; &lt;span class="nt"&gt;dhcp&lt;/span&gt; &lt;span class="nt"&gt;about&lt;/span&gt; &lt;span class="nt"&gt;extra&lt;/span&gt; &lt;span class="nt"&gt;ipxe&lt;/span&gt; &lt;span class="nt"&gt;options&lt;/span&gt; &lt;span class="nt"&gt;available&lt;/span&gt;
+&lt;span class="nt"&gt;option&lt;/span&gt; &lt;span class="nt"&gt;ipxe&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nc"&gt;keep-san&lt;/span&gt; &lt;span class="nt"&gt;code&lt;/span&gt; &lt;span class="nt"&gt;8&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nt"&gt;unsigned&lt;/span&gt; &lt;span class="nt"&gt;integer&lt;/span&gt; &lt;span class="nt"&gt;8&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
+&lt;span class="nt"&gt;option&lt;/span&gt; &lt;span class="nt"&gt;ipxe&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nc"&gt;no-pxedhcp&lt;/span&gt; &lt;span class="nt"&gt;code&lt;/span&gt; &lt;span class="nt"&gt;176&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nt"&gt;unsigned&lt;/span&gt; &lt;span class="nt"&gt;integer&lt;/span&gt; &lt;span class="nt"&gt;8&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
+&lt;span class="nt"&gt;option&lt;/span&gt; &lt;span class="nt"&gt;ipxe&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nc"&gt;pxe&lt;/span&gt; &lt;span class="nt"&gt;code&lt;/span&gt; &lt;span class="nt"&gt;33&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nt"&gt;unsigned&lt;/span&gt; &lt;span class="nt"&gt;integer&lt;/span&gt; &lt;span class="nt"&gt;8&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
+
+&lt;span class="nt"&gt;allow&lt;/span&gt; &lt;span class="nt"&gt;booting&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
+&lt;span class="nt"&gt;allow&lt;/span&gt; &lt;span class="nt"&gt;bootp&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
+&lt;span class="nt"&gt;option&lt;/span&gt; &lt;span class="nt"&gt;domain-name&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;cudd.li&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
+&lt;span class="nt"&gt;option&lt;/span&gt; &lt;span class="nt"&gt;domain-name-servers&lt;/span&gt; &lt;span class="nt"&gt;172&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nc"&gt;16&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nc"&gt;1&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nc"&gt;2&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="nt"&gt;8&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nc"&gt;8&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nc"&gt;8&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nc"&gt;8&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
+
+&lt;span class="nt"&gt;default-lease-time&lt;/span&gt; &lt;span class="nt"&gt;600&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
+&lt;span class="nt"&gt;max-lease-time&lt;/span&gt; &lt;span class="nt"&gt;7200&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
+
+&lt;span class="err"&gt;#&lt;/span&gt; &lt;span class="nt"&gt;Use&lt;/span&gt; &lt;span class="nt"&gt;this&lt;/span&gt; &lt;span class="nt"&gt;to&lt;/span&gt; &lt;span class="nt"&gt;enble&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt; &lt;span class="nt"&gt;disable&lt;/span&gt; &lt;span class="nt"&gt;dynamic&lt;/span&gt; &lt;span class="nt"&gt;dns&lt;/span&gt; &lt;span class="nt"&gt;updates&lt;/span&gt; &lt;span class="nt"&gt;globally&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;
+&lt;span class="p"&gt;#&lt;/span&gt;&lt;span class="nn"&gt;ddns-update-style&lt;/span&gt; &lt;span class="nt"&gt;none&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
+
+&lt;span class="err"&gt;#&lt;/span&gt; &lt;span class="nt"&gt;If&lt;/span&gt; &lt;span class="nt"&gt;this&lt;/span&gt; &lt;span class="nt"&gt;DHCP&lt;/span&gt; &lt;span class="nt"&gt;server&lt;/span&gt; &lt;span class="nt"&gt;is&lt;/span&gt; &lt;span class="nt"&gt;the&lt;/span&gt; &lt;span class="nt"&gt;official&lt;/span&gt; &lt;span class="nt"&gt;DHCP&lt;/span&gt; &lt;span class="nt"&gt;server&lt;/span&gt; &lt;span class="nt"&gt;for&lt;/span&gt; &lt;span class="nt"&gt;the&lt;/span&gt; &lt;span class="nt"&gt;local&lt;/span&gt;
+&lt;span class="err"&gt;#&lt;/span&gt; &lt;span class="nt"&gt;network&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="nt"&gt;the&lt;/span&gt; &lt;span class="nt"&gt;authoritative&lt;/span&gt; &lt;span class="nt"&gt;directive&lt;/span&gt; &lt;span class="nt"&gt;should&lt;/span&gt; &lt;span class="nt"&gt;be&lt;/span&gt; &lt;span class="nt"&gt;uncommented&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;
+&lt;span class="nt"&gt;authoritative&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
+
+&lt;span class="err"&gt;#&lt;/span&gt; &lt;span class="nt"&gt;Use&lt;/span&gt; &lt;span class="nt"&gt;this&lt;/span&gt; &lt;span class="nt"&gt;to&lt;/span&gt; &lt;span class="nt"&gt;send&lt;/span&gt; &lt;span class="nt"&gt;dhcp&lt;/span&gt; &lt;span class="nt"&gt;log&lt;/span&gt; &lt;span class="nt"&gt;messages&lt;/span&gt; &lt;span class="nt"&gt;to&lt;/span&gt; &lt;span class="nt"&gt;a&lt;/span&gt; &lt;span class="nt"&gt;different&lt;/span&gt; &lt;span class="nt"&gt;log&lt;/span&gt; &lt;span class="nt"&gt;file&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="nt"&gt;you&lt;/span&gt; &lt;span class="nt"&gt;also&lt;/span&gt;
+&lt;span class="err"&gt;#&lt;/span&gt; &lt;span class="nt"&gt;have&lt;/span&gt; &lt;span class="nt"&gt;to&lt;/span&gt; &lt;span class="nt"&gt;hack&lt;/span&gt; &lt;span class="nt"&gt;syslog&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nc"&gt;conf&lt;/span&gt; &lt;span class="nt"&gt;to&lt;/span&gt; &lt;span class="nt"&gt;complete&lt;/span&gt; &lt;span class="nt"&gt;the&lt;/span&gt; &lt;span class="nt"&gt;redirection&lt;/span&gt;&lt;span class="o"&gt;).&lt;/span&gt;
+&lt;span class="nt"&gt;log-facility&lt;/span&gt; &lt;span class="nt"&gt;local7&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
+
+&lt;span class="nt"&gt;subnet&lt;/span&gt; &lt;span class="nt"&gt;172&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nc"&gt;16&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nc"&gt;1&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nc"&gt;0&lt;/span&gt; &lt;span class="nt"&gt;netmask&lt;/span&gt; &lt;span class="nt"&gt;255&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nc"&gt;255&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nc"&gt;255&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nc"&gt;0&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="err"&gt;range&lt;/span&gt; &lt;span class="err"&gt;172.16.1.200&lt;/span&gt; &lt;span class="err"&gt;172.16.1.250&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="err"&gt;option&lt;/span&gt; &lt;span class="err"&gt;routers&lt;/span&gt; &lt;span class="err"&gt;172.16.1.1&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="err"&gt;option&lt;/span&gt; &lt;span class="err"&gt;subnet-mask&lt;/span&gt; &lt;span class="err"&gt;255.255.255.0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="err"&gt;option&lt;/span&gt; &lt;span class="err"&gt;domain-search&lt;/span&gt; &lt;span class="err"&gt;&amp;quot;cudd.li&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="err"&gt;option&lt;/span&gt; &lt;span class="err"&gt;domain-name-servers&lt;/span&gt; &lt;span class="err"&gt;172.16.1.2,8.8.8.8&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="err"&gt;filename&lt;/span&gt; &lt;span class="err"&gt;&amp;quot;/pxelinux.0&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="err"&gt;next-server&lt;/span&gt; &lt;span class="err"&gt;172.16.1.2&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="err"&gt;#&lt;/span&gt; &lt;span class="nt"&gt;A&lt;/span&gt; &lt;span class="nt"&gt;group&lt;/span&gt; &lt;span class="nt"&gt;for&lt;/span&gt; &lt;span class="nt"&gt;iPXE&lt;/span&gt; &lt;span class="nt"&gt;bootable&lt;/span&gt; &lt;span class="nt"&gt;hosts&lt;/span&gt;
+&lt;span class="nt"&gt;group&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="err"&gt;#&lt;/span&gt; &lt;span class="err"&gt;Avoid&lt;/span&gt; &lt;span class="err"&gt;infinite&lt;/span&gt; &lt;span class="err"&gt;loop&lt;/span&gt;
+    &lt;span class="err"&gt;if&lt;/span&gt; &lt;span class="err"&gt;exists&lt;/span&gt; &lt;span class="err"&gt;user-class&lt;/span&gt; &lt;span class="err"&gt;and&lt;/span&gt; &lt;span class="err"&gt;(&lt;/span&gt; &lt;span class="err"&gt;option&lt;/span&gt; &lt;span class="err"&gt;user-class&lt;/span&gt; &lt;span class="err"&gt;=&lt;/span&gt; &lt;span class="err"&gt;&amp;quot;iPXE&amp;quot;&lt;/span&gt; &lt;span class="err"&gt;)&lt;/span&gt; &lt;span class="err"&gt;{&lt;/span&gt;
+        &lt;span class="err"&gt;filename&lt;/span&gt; &lt;span class="err"&gt;&amp;quot;&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt; &lt;span class="nt"&gt;else&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="err"&gt;filename&lt;/span&gt; &lt;span class="err"&gt;&amp;quot;/undionly.kpxe&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+
+    &lt;span class="nt"&gt;option&lt;/span&gt; &lt;span class="nt"&gt;ipxe&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nc"&gt;keep-san&lt;/span&gt; &lt;span class="nt"&gt;1&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
+    &lt;span class="nt"&gt;option&lt;/span&gt; &lt;span class="nt"&gt;ipxe&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nc"&gt;no-pxedhcp&lt;/span&gt; &lt;span class="nt"&gt;1&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
+
+    &lt;span class="err"&gt;#&lt;/span&gt; &lt;span class="nt"&gt;My&lt;/span&gt; &lt;span class="nt"&gt;HTPC&lt;/span&gt; &lt;span class="nt"&gt;host&lt;/span&gt;
+    &lt;span class="nt"&gt;host&lt;/span&gt; &lt;span class="nt"&gt;htpc1&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="err"&gt;option&lt;/span&gt; &lt;span class="err"&gt;host-name&lt;/span&gt; &lt;span class="err"&gt;&amp;quot;htpc1.cudd.li&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+        &lt;span class="err"&gt;hardware&lt;/span&gt; &lt;span class="err"&gt;ethernet&lt;/span&gt; &lt;span class="err"&gt;00:01:2&lt;/span&gt;&lt;span class="n"&gt;e&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="mi"&gt;33&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="mi"&gt;51&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="n"&gt;d&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+        &lt;span class="err"&gt;fixed-address&lt;/span&gt; &lt;span class="err"&gt;172.16.1.13&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+        &lt;span class="err"&gt;option&lt;/span&gt; &lt;span class="err"&gt;root-path&lt;/span&gt; &lt;span class="err"&gt;&amp;quot;&lt;/span&gt;&lt;span class="n"&gt;iscsi&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="mf"&gt;172.16.1.10&lt;/span&gt;&lt;span class="o"&gt;:::&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="n"&gt;iqn&lt;/span&gt;&lt;span class="mf"&gt;.2012&lt;/span&gt;&lt;span class="mi"&gt;-11&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;li&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;cudd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;router&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="n"&gt;htpc1&lt;/span&gt;&lt;span class="err"&gt;&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="err"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;With that setup we can start it and set it to autostart on boot.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;[root@tgtd html]# service dhcpd start
+[root@tgtd html]# chkconfig dhcpd on
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;TFTP Server&lt;/h2&gt;
+&lt;p&gt;The TFTP server is launched as a xinetd service. On centos this service is disabled by 
+default. Open &lt;code&gt;/etc/xinetd.d/tftp&lt;/code&gt; and set disable to no.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;service tftp
+{
+    socket_type     = dgram
+    protocol        = udp
+    wait            = yes
+    user            = root
+    server          = /usr/sbin/in.tftpd
+    server_args     = -s /var/lib/tftpboot
+    disable         = no
+    per_source      = 11
+    cps         = 100 2
+    flags           = IPv4
+}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;(Optional) Copy some helpful files into the tftp root. Enable PXE booting of installation images.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;cp /usr/lib/syslinux/pxelinux.0 /var/lib/tftpboot/
+cp /usr/lib/syslinux/menu.c32 /var/lib/tftpboot
+mkdir /var/lib/tftpboot/pxelinux.cfg
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;With the required pxe files in place we can create a basic boot option menu. The default config 
+loaded is &lt;code&gt;/var/lib/tftpboot/pxelinux.cfg/default&lt;/code&gt;. Open it and configure to your pleasing. 
+My example shows 2 PXE Image OS installers and a NFS root system boot setup. These are all 
+optional and you can setup your own client OS's as you please. For reference the paths 
+are all relative to the tftp root defined as &lt;code&gt;/var/lib/tftpboot&lt;/code&gt; in the tftp config. This 
+means that the kernel in label 1 points to the full path of &lt;code&gt;/var/lib/tftpboot/centos63/vmlinuz&lt;/code&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;timeout 10
+default menu.c32
+menu title $$$$$$Boot Sale On Now!$$$$$$
+
+label 1
+    menu label ^ 1) CentOS 6.3 x86_64 Install
+    kernel centos63/vmlinuz
+    append initrd=centos63/initrd.img
+
+label 2
+    menu label ^ 2) HTPC1 via nfsroot
+    kernel htpc1/vmlinuz-linux
+    append initrd=htpc1/initramfs-linux.img rootfstype=nfs4 root=/dev/nfs nfsroot=172.16.1.4:/tank/nfsroot/htpc1,v4,rsize=16384,wsize=16384 ip=:::::eth0:dhcp
+
+label 3
+    menu label ^ 3) Arch Installer i386/x86_64
+    kernel arch_install/vmlinuz
+    append initrd=arch_install/archiso.img
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Instead of all this you can just boot an installation DVD too. Up to you how you prefer to setup 
+client systems.&lt;/p&gt;
+&lt;p&gt;Then we start &lt;code&gt;xinetd&lt;/code&gt; and enable auto start upon boot.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;[root@tgtd html]# service xinetd start
+[root@tgtd html]# chkconfig xinetd on
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;From this point you should have a working iSCSI target setup for client installation.&lt;/p&gt;
+&lt;h2&gt;Client Setup&lt;/h2&gt;
+&lt;p&gt;I will not be going over how to configure a specific OS for booting over iSCSI. I did 
+however have success using the &lt;a href="https://wiki.archlinux.org/index.php/ISCSI_Boot"&gt;Arch Linux ISCSI Boot Instructions&lt;/a&gt; 
+wiki page. For CentOS clients the iSCSI support is built into the installer so its 
+just a matter of choosing the advanced storage options and manually adding a target. 
+This is a much more streamlined way of doing it over Arch depending on your needs.&lt;/p&gt;
+&lt;h2&gt;Performance&lt;/h2&gt;
+&lt;p&gt;For reference i am getting about 50MB/s sequential write speeds and 80MB/s sequential 
+read speeds on each target. If you factor in the fact that the drives are very old 
+(~2004) and iSCSI protocol overhead, the speeds are great. CPU usage is minimal and 
+not much of a factor in this.&lt;/p&gt;
+&lt;h2&gt;Troubleshooting&lt;/h2&gt;
+&lt;p&gt;First step is trying to see whats going on in the logs. DHCP and tftp will both log 
+to syslog by default. Watch the log by tailing it as you try and boot.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;[root@client ~]# tailf /var/log/messages
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;To make sure iSCSI is functioning correctly we can try connecting from an existing host.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;[root@client ~]# iscsiadm -m node -Tiqn.2012-11.li.cudd.router:htpc1 -p 172.16.1.10 -l
+Logging in to [iface: default, target: iqn.2012-11.li.cudd.router:htpc1, portal: 172.16.1.10,3260] (multiple)
+Login to [iface: default, target: iqn.2012-11.li.cudd.router:htpc1, portal: 172.16.1.10,3260] successful.
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Your kernel log, dmesg, should print something like the following if the disk attached correctly.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;[root@client ~]# dmesg
+... snip ...
+[90168.273162] scsi8 : iSCSI Initiator over TCP/IP
+[90168.529067] scsi 8:0:0:0: RAID              IET      Controller       0001 PQ: 0 ANSI: 5
+[90168.530069] scsi 8:0:0:1: Direct-Access     AMCC     9500S-8    DISK  2.06 PQ: 0 ANSI: 5
+[90168.530751] sd 8:0:0:1: [sdc] 976541696 512-byte logical blocks: (499 GB/465 GiB)
+[90168.531444] sd 8:0:0:1: [sdc] Write Protect is off
+[90168.531451] sd 8:0:0:1: [sdc] Mode Sense: 49 00 00 08
+[90168.532005] sd 8:0:0:1: [sdc] Write cache: enabled, read cache: enabled, doesn&amp;#39;t support DPO or FUA
+[90168.534263]  sdc: sdc1
+[90168.536225] sd 8:0:0:1: [sdc] Attached SCSI disk
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;You can use the -u flag to disconnect from the device again.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;[root@client ~]# iscsiadm -m node -Tiqn.2012-11.li.cudd.router:htpc1 -p 172.16.1.10 -u
+Logging out of session [sid: 3, target: iqn.2012-11.li.cudd.router:htpc1, portal: 172.16.1.10,3260]
+Logout of [sid: 3, target: iqn.2012-11.li.cudd.router:htpc1, portal: 172.16.1.10,3260] successful.
+&lt;/pre&gt;&lt;/div&gt;</content><category term="CentOS"></category><category term="iSCSI"></category><category term="PXE"></category><category term="DHCP"></category><category term="TFTP"></category></entry></feed>
