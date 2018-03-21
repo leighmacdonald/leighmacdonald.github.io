@@ -1,0 +1,9 @@
+{% extends "_base.html" %}
+{% from "_macros.html" import render_article %}
+
+
+{% block content %}
+
+{{ render_article(article, full=True) }}
+
+{% endblock %}

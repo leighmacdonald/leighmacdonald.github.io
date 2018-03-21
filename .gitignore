@@ -3,3 +3,6 @@
 output/*
 __pycache__
 pelican-plugins
+pelican-themes
+node_modules
+bower_components

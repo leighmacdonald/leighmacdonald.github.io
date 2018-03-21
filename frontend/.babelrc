@@ -1,0 +1,14 @@
+{
+  "presets": [
+    [
+      "env",
+      {
+        "useBuiltIns": true,
+        "debug": false
+      }
+    ]
+  ],
+  "plugins": [
+    "transform-es2015-modules-commonjs"
+  ]
+}

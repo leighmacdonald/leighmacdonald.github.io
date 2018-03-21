@@ -1,0 +1,45 @@
+{% macro render_article(article, full=False) -%}
+    <div class="grid-x grid-padding-x">
+        <article class="large-12 cell">
+            <header>
+                <h1><a href="{{ SITEURL }}/{{ article.url }}" rel="bookmark"
+                       title="Permalink to {{ article.title|striptags }}">{{ article.title }}</a></h1>
+                <div class="clearfix">
+
+                        <time class="date" title="{{ article.date.isoformat() }}"><i
+                                class="fi-calendar"></i> {{ article.locale_date }} </time>
+                        {% if article.authors %}
+                            <address class="author_list">Authors:
+                                {% for author in article.authors|sort %}
+                                    <a class="author" href="{{ SITEURL }}/{{ author.url }}" rel="author">{{ author }}</a>
+                                {% endfor %}
+                            </address>
+                        {% endif %}
+                    <div class="float-right header_text" style="display: inline-block">
+                        {% if article.tags %}
+                            <span class="header_color">Tags: </span>
+                            {% for tag in article.tags %}
+                                <a href="{{ SITEURL }}/{{ tag.url }}">
+                                    <span class="cat_tag">{{ tag|e }}{% if not loop.last %},{% endif %}</span></a>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                </div>
+            </header>
+
+            {% if full %}
+                {{ article.content }}
+            {% else %}
+                {{ article.summary }}
+                <footer>
+                    <div class="tiny primary ">
+                        <a href="{{ SITEURL }}/{{ article.url }}" rel="bookmark"
+                           title="Permalink to {{ article.title|striptags }}">Read
+                            More <i class="fi-arrow-right"></i>
+                        </a>
+                    </div>
+                </footer>
+            {% endif %}
+        </article>
+    </div>
+{%- endmacro %}

@@ -1,0 +1,28 @@
+<figure class="text-right">
+    <img src="https://s.gravatar.com/avatar/261a7ce05887c4f60d68a1e8351302b6?s=200">
+    <figcaption>Leigh MacDonald</figcaption>
+</figure>
+{#            <section>#}
+{#                <header><h5><i class="fi-link"></i> Links</h5></header>#}
+{#                {% for title, link in MENUITEMS %}#}
+{#                    <a href="{{ link }}"><i class="{{ THEME_MENUITEMS[loop.index0] }}"></i>{{ title }}</a>#}
+{#                {% endfor %}#}
+{#            </section>#}
+<section class="text-right">
+    <header>
+        <h5><i class="fi-cloud"></i> Tag Cloud</h5>
+    </header>
+
+    {% for tag in tag_cloud %}
+        <a href="{{ SITEURL }}/{{ tag.0.url }}">
+            <span class="cat_tag">{{ tag.0 }}{% if not loop.last %},{% endif %}</span>
+        </a>
+    {% endfor %}
+</section>
+<section class="text-right">
+    <header><h5><i class="fi-folder"></i> Categories</h5></header>
+    {% for cat, null in categories %}
+        <a class="cat_tag{% if cat == category %} active{% endif %}" href="{{ SITEURL }}/{{ cat.url }}"><span
+                class="cat_tag">{{ cat }}{% if not loop.last %},{% endif %}</span></a>
+    {% endfor %}
+</section>

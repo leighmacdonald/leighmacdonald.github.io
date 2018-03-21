@@ -2,12 +2,29 @@
 # -*- coding: utf-8 -*- #
 from __future__ import unicode_literals
 
-AUTHOR = 'Leigh MacDonald'
-SITENAME = 'Nothing Important'
-SITEURL = ''
+from datetime import datetime
 
-PLUGIN_PATHS = ['pelican-plugins']
-PLUGINS = ['assets', 'sitemap', 'gravatar']
+AUTHOR = 'Leigh MacDonald'
+SITENAME = 'Midnight in a Perfect World'
+SITEURL = ''
+AUTHOR_EMAIL = 'leigh.macdonald@gmail.com'
+
+PLUGIN_PATHS = ['../pelican-plugins']
+PLUGINS = ['sitemap', 'tag_cloud']
+
+SITEMAP = {
+    'format': 'xml',
+    'priorities': {
+        'articles': 0.5,
+        'indexes': 0.5,
+        'pages': 0.5
+    },
+    'changefreqs': {
+        'articles': 'monthly',
+        'indexes': 'daily',
+        'pages': 'monthly'
+    }
+}
 
 PATH = 'content'
 
@@ -21,18 +38,22 @@ CATEGORY_FEED_ATOM = None
 TRANSLATION_FEED_ATOM = None
 AUTHOR_FEED_ATOM = None
 AUTHOR_FEED_RSS = None
+BUILD_DATE = datetime.now()
+THEME = "./theme"
 
-# Blogroll
-LINKS = (('Pelican', 'http://getpelican.com/'),
-         ('Python.org', 'http://python.org/'),
-         ('Jinja2', 'http://jinja.pocoo.org/'),
-         ('You can modify those links in your config file', '#'),)
+LINKS = (
+    ('Python.org', 'http://python.org/'),
+    ('Jinja2', 'http://jinja.pocoo.org/'),)
 
 # Social widget
-SOCIAL = (('You can add links in your config file', '#'),
-          ('Another social link', '#'),)
+SOCIAL = (('GitHub', 'https://github.com/leighmacdonald'),
+          ('BitBucket', 'https://bitbucket.org/leighmacdonald'),
+          'LinkedIn', 'https://www.linkedin.com/in/leighmmacdonald/')
 
-DEFAULT_PAGINATION = 10
+DEFAULT_PAGINATION = 1
 
 # Uncomment following line if you want document-relative URLs when developing
-#RELATIVE_URLS = True
+# RELATIVE_URLS = True
+
+MENUITEMS = [('Homepage', '/'), ('Categories', '/categories.html')]
+THEME_MENUITEMS = ('fi-home', 'fi-folder')

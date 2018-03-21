@@ -1,0 +1,119 @@
+@charset "utf-8";
+
+@import 'settings';
+@import './../bower_components/foundation-sites/scss/foundation';
+@import './../bower_components/motion-ui/src/motion-ui';
+
+@import "pygment";
+@import "fonts";
+
+@include foundation-global-styles;
+//@include foundation-grid;
+// @include foundation-flex-grid;
+@include foundation-xy-grid-classes;
+@include foundation-typography;
+@include foundation-button;
+@include foundation-forms;
+// @include foundation-range-input;
+//@include foundation-accordion;
+//@include foundation-accordion-menu;
+@include foundation-badge;
+//@include foundation-breadcrumbs;
+@include foundation-button-group;
+@include foundation-callout;
+//@include foundation-card;
+@include foundation-close-button;
+@include foundation-menu;
+@include foundation-menu-icon;
+@include foundation-drilldown-menu;
+@include foundation-dropdown;
+@include foundation-dropdown-menu;
+@include foundation-responsive-embed;
+@include foundation-label;
+//@include foundation-media-object;
+//@include foundation-off-canvas;
+//@include foundation-orbit;
+@include foundation-pagination;
+//@include foundation-progress-bar;
+// @include foundation-progress-element;
+// @include foundation-progress-element;
+// @include foundation-meter-element;
+//@include foundation-slider;
+@include foundation-sticky;
+//@include foundation-reveal;
+@include foundation-switch;
+@include foundation-table;
+//@include foundation-tabs;
+@include foundation-thumbnail;
+@include foundation-title-bar;
+@include foundation-tooltip;
+@include foundation-top-bar;
+@include foundation-visibility-classes;
+@include foundation-float-classes;
+@include foundation-flex-classes;
+
+@include foundation-prototype-classes;
+
+@include motion-ui-transitions;
+@include motion-ui-animations;
+
+
+body {
+  overflow-y: scroll; // Always show scrollbar
+  background: url("/theme/images/bg_train.jpg") no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
+
+
+.container {
+  background-color: rgba(0, 0, 0, 0.95);
+  margin-top: 1em;
+  padding-top: 1em;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: 0.5em;
+  margin-bottom: 1em;
+}
+
+.top-bar {
+  a, li, .menu {
+    background-color: transparent;
+  }
+}
+
+.label:hover {
+  cursor: pointer;
+  background-color: lighten($warning-color, 10%);
+}
+
+.header_text {
+  font-size: 0.75em;
+}
+
+.header_color {
+  color: #63676a;
+}
+
+.date {
+  @extend .header_color;
+  @extend .float-left;
+  @extend .header_text;
+}
+
+.author_list {
+  @extend .header_color;
+  @extend .float-left;
+  @extend .header_text;
+  margin-left: 1em;
+}
+
+.cat_tag {
+  @extend .rounded;
+  @extend .tiny;
+  color: $warning-color;
+
+}
